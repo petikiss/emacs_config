@@ -177,16 +177,6 @@
 
 (mouse-avoidance-mode 'banish)
 
-;; ---------------------------------------------------------------------
-;; IRC
-                                        ;
-                                        ;(require 'rcirc)
-                                        ;(require 'rcirc-notify+)
-                                        ;
-                                        ;(setq rcirc-default-nick "peszilag")
-                                        ;(setq rcirc-default-user-name "peszilag")
-                                        ;(setq rcirc-default-user-full-name "Peter Szilagyi")
-                                        ;(setq rcirc-default-server "eslinuxp01.emea.nsn-net.net")
 
 ;; ---------------------------------------------------------------------
 ;; miscellaneous
@@ -241,12 +231,12 @@ character typed."
 ;; -- ETAGS-SELECT --
 ;; find . -name \*.cc -o -name \*.hh -o -name \*.c | etags -
 ;;load the etags-select.el source code
-(load-file "~/marci/etags-select.el")
+(load-file "~/emacs_config/etags-select.el")
 
-;;(setq tags-table-list '("/vobs/tas/TAGS"))
-(setq tags-table-list '("/local/scratch/views//emrtsis_esekiws5873_ht70915_kddi/vobs/tas"))
 
-;; setq tags-table-list '("vobs/tas/TAGS"))
+(setq tags-table-list '(""))
+
+
 
 (defun find-tag-under-point()
   (interactive)
@@ -260,14 +250,14 @@ character typed."
 
 ;; -------------------------------------------------------------------------------------------
 ;; -- HIGHLIGHT-SYMBOL --
-(load-file "~/marci/highlight-symbol.el")
+(load-file "~/emacs_config/highlight-symbol.el")
 (require 'highlight-symbol)
 (global-set-key [f3] 'highlight-symbol-at-point)
 
 
 ;; -------------------------------------------------------------------------------------------
 ;; -- FIND_FILE_IN-TAGS --
-(load-file "~/marci/find-file-in-tags.el")
+(load-file "~/emacs_config/find-file-in-tags.el")
 (global-set-key (kbd "<f12>")   'find-file-in-tags)
 
 
@@ -376,7 +366,3 @@ character typed."
     (hs-minor-mode t)))
 
 
-
-(load-file "~/marci/xcscope.el")
-(require 'xcscope)
-(global-set-key (kbd "<f2>")   'cscope-find-functions-calling-this-function)
