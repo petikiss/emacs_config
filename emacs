@@ -22,7 +22,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :Foundry "osx" :slant normal :weight normal :height 109 :width normal)))))
+ '(default ((t (:family "DejaVu Sans Mono" :Foundry "osx" :slant normal :weight normal :height 107 :width normal)))))
 
 ;; ---------------------------------------------------------------------
 ;; TABs and spaces
@@ -52,9 +52,6 @@
 
                                         ; show trailing whitespace at end of lines
 (setq-default show-trailing-whitespace t)
-
-                                        ; show empty lines after end of buffer
-                                        ;(setq default-indicate-empty-lines t)
 
 
 ;; ---------------------------------------------------------------------
@@ -90,20 +87,27 @@
 ;; ---------------------------------------------------------------------
 ;; keybindings
 
+
+(global-set-key (kbd "<f1>")  'pop-tag-mark)
+(global-set-key (kbd "<f2>")  'find-tag-under-point)
+(global-set-key (kbd "<f3>")  'highlight-symbol-at-point)
+;(global-set-key (kbd "<f4>")  'global-highlight-changes-mode)
 (global-set-key (kbd "<f5>") 'open-dot-emacs)
 ;(global-set-key (kbd "<f6>") 'list-bookmarks)
 (global-set-key (kbd "<f7>") 'goto-line)
 ;(global-set-key (kbd "<f8>") 'shell)
 ;(global-set-key (kbd "<f9>") 'compile)
+(global-set-key (kbd "<f10>") 'close-all-buffers)
+;(global-set-key (kbd "<f11>") 'find-file-in-tags)
+(global-set-key (kbd "<f12>") 'find-file-in-tags)
 
-                                        ;(global-set-key (kbd "C-<next>") 'next-buffer)
-                                        ;(global-set-key (kbd "C-<prior>") 'previous-buffer)
 
-(global-set-key (kbd "C-c i") 'indent-region)
-(global-set-key (kbd "C-c o") 'comment-region)
+
+;(global-set-key (kbd "C-c i") 'indent-region)
+;(global-set-key (kbd "C-c o") 'comment-region)
 (global-set-key (kbd "C-c u") 'uncomment-region)
-(global-set-key (kbd "C-c m") 'man-follow)
-(global-set-key (kbd "C-c f") 'open-file-under-cursor)
+;(global-set-key (kbd "C-c m") 'man-follow)
+;(global-set-key (kbd "C-c f") 'open-file-under-cursor)
 
 (put 'upcase-region 'disabled nil) ; C-c C-u
 (put 'downcase-region 'disabled nil) ; C-c C-l
@@ -136,15 +140,6 @@
   (interactive)
   (find-file "~/.emacs"))
 
-(defun kill-buffer-other-window (arg)
-  "Kill the buffer in the other window, and make the current buffer full size. If no other window, kills current buffer."
-  (interactive "p")
-  (let ((buf (save-window-excursion
-               (other-window arg)
-               (current-buffer))))
-    (delete-windows-on buf)
-    (kill-buffer buf)))
-
 ;; ---------------------------------------------------------------------
 ;; shell
 
@@ -169,8 +164,8 @@
 ;; ---------------------------------------------------------------------
 ;; remote editing via scp
 
-(require 'tramp)
-(setq tramp-default-method "scp")
+;(require 'tramp)
+;(setq tramp-default-method "scp")
 
 ;; ---------------------------------------------------------------------
 ;; Make the mouse fuck off when you type.
@@ -197,9 +192,6 @@
 ;; ---------------------------------------------------------------------
 ;; stuff
 
-(defun close-all-buffers ()
-  (interactive)
-  (mapc 'kill-buffer (buffer-list)))
 
 ; Use "`" to jump to the matching parenthesis.
 (defun goto-match-paren (arg)
@@ -231,12 +223,10 @@ character typed."
 ;; -- ETAGS-SELECT --
 ;; find . -name \*.cc -o -name \*.hh -o -name \*.c | etags -
 ;;load the etags-select.el source code
-(load-file "~/emacs_config/etags-select.el")
+(load-file "~/marci/etags-select.el")
 
-
-(setq tags-table-list '(""))
-
-
+;;(setq tags-table-list '("/vobs/tas/TAGS"))
+;(setq tags-table-list '("/local/scratch/views/emrtsis_esekiws5873_homok2/vobs/tas"))
 
 (defun find-tag-under-point()
   (interactive)
@@ -245,47 +235,20 @@ character typed."
              (delete-window))
     (etags-select-find-tag-at-point)))
 
-(global-set-key (kbd "<f4>")   'find-tag-under-point)
+;(global-set-key (kbd "<f2>")   'find-tag-under-point)
 
 
 ;; -------------------------------------------------------------------------------------------
 ;; -- HIGHLIGHT-SYMBOL --
-(load-file "~/emacs_config/highlight-symbol.el")
+(load-file "~/marci/highlight-symbol.el")
 (require 'highlight-symbol)
-(global-set-key [f3] 'highlight-symbol-at-point)
+;(global-set-key [f3] 'highlight-symbol-at-point)
 
 
 ;; -------------------------------------------------------------------------------------------
 ;; -- FIND_FILE_IN-TAGS --
-(load-file "~/emacs_config/find-file-in-tags.el")
-(global-set-key (kbd "<f12>")   'find-file-in-tags)
-
-
-;; -------------------------------------------------------------------------------------------
-;; -- SEARCH IN FILE --
-(require 'thingatpt)
-
-(defun my-isearch-yank-word-or-char-from-beginning ()
-  "Move to beginning of word before yanking word in isearch-mode."
-  (interactive)
-  ;; Making this work after a search string is entered by user
-  ;; is too hard to do, so work only when search string is empty.
-  (if (= 0 (length isearch-string))
-      (beginning-of-thing 'word))
-  (isearch-yank-word-or-char)
-  ;; Revert to 'isearch-yank-word-or-char for subsequent calls
-  (substitute-key-definition 'my-isearch-yank-word-or-char-from-beginning
-                 'isearch-yank-word-or-char
-                 isearch-mode-map))
-
-(add-hook 'isearch-mode-hook
- (lambda ()
-   "Activate my customized Isearch word yank command."
-   (substitute-key-definition 'isearch-yank-word-or-char
-                  'my-isearch-yank-word-or-char-from-beginning
-                  isearch-mode-map)))
-
-;; (global-set-key (kbd "<f2>")   'my-isearch-yank-word-or-char-from-beginning)
+(load-file "~/marci/find-file-in-tags.el")
+;(global-set-key (kbd "<f12>")   'find-file-in-tags)
 
 
 ;; -----------------------------------------------------------------------------------------
@@ -365,4 +328,43 @@ character typed."
     (local-set-key (kbd "C-<up>")  'hs-hide-block)
     (hs-minor-mode t)))
 
+
+; can be removed - if it was not missing :)
+(load-file "~/marci/xcscope.el")
+;(load-file "~/marci/cscope-filter.el")
+(require 'xcscope)
+;(require 'cscope-filter)
+(global-set-key (kbd "<f4>")   'cscope-find-this-symbol)
+
+
+
+;; ---------------------------------------------------------------------
+;; go back to previous buffer
+;; ---------------------------------------------------------------------
+
+(defun switch-to-previous-buffer ()
+  "Switch to previously open buffer.
+Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+
+
+
+;; ---------------------------------------------------------------------
+;; close all buffer
+;; ---------------------------------------------------------------------
+(defun kill-buffer-other-window (arg)
+  "Kill the buffer in the other window, and make the current buffer full size. If no other window, kills current buffer."
+  (interactive "p")
+  (let ((buf (save-window-excursion
+               (other-window arg)
+               (current-buffer))))
+    (delete-windows-on buf)
+    (kill-buffer buf)))
+
+
+(defun close-all-buffers ()
+  (interactive)
+  (if (y-or-n-p "Really close all buffer?")
+    (progn (mapc 'kill-buffer (buffer-list)))))
 
